@@ -180,7 +180,7 @@
 </head>
 <body class="intro-open">
   <header class="site-header" inert>
-    <a class="brand" href="/" aria-label="Linettee Park, home">Linettee Park</a>
+    <a class="brand" href="#home" aria-label="Linettee Park, home">Linettee Park</a>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
     <nav class="nav" id="primary-nav" aria-label="Primary navigation">
       <button type="button" data-view="about">About</button>
@@ -378,6 +378,17 @@
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) finish();
       else panel.addEventListener('transitionend', finish, { once: true });
     }
+    document.querySelector('.brand').addEventListener('click', event => {
+      event.preventDefault();
+      panel.classList.remove('open', 'visible');
+      panel.setAttribute('aria-hidden', 'true');
+      content.replaceChildren();
+      document.body.classList.remove('is-open');
+      header.classList.remove('scrolled-away');
+      setMenu(false);
+      show('default', true);
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    });
     closeButton.addEventListener('click', closePanel);
     document.addEventListener('keydown', event => { if (event.key === 'Escape') { closePanel(); setMenu(false); } });
   </script>
