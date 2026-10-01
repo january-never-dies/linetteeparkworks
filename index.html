@@ -105,7 +105,8 @@
     .close::before, .close::after { content: ""; position: absolute; top: 50%; left: 50%; width: 27px; height: 1px; background: #fff; transform-origin: center; }
     .close::before { transform: translate(-50%, -50%) rotate(45deg); }
     .close::after { transform: translate(-50%, -50%) rotate(-45deg); }
-    .close:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
+    .close:focus, .close:focus-visible { outline: none; }
+    .close:focus-visible::before, .close:focus-visible::after { height: 2px; }
     @media (max-width: 600px) {
       .captcha-panel { width: min(78vw, 580px); padding: 10px; }
       .captcha-word { font-size: clamp(30px, 9vw, 55px); }
