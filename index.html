@@ -193,7 +193,7 @@
     .entry-closed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
     .expanded-panel.works-arrival { transition: none; }
 
-    .restaurant-photo { object-position: 50% 83%; }
+    .restaurant-photo { object-position: 50% 83%; transform: scale(1.15); transform-origin: 50% 50%; }
   </style>
 </head>
 <body class="intro-open">
@@ -285,7 +285,7 @@
       childhoodPhotos[photoIndex].classList.remove('current-photo');
       photoIndex = (photoIndex + 1) % childhoodPhotos.length;
       childhoodPhotos[photoIndex].classList.add('current-photo');
-    }, 3500);
+    }, 5000);
     const views = ['about', 'works', 'taste'];
     function markCurrent(view) {
       buttons.forEach(button => {
