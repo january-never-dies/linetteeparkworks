@@ -194,7 +194,7 @@
     .entry-closed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scale(1.15); }
     .expanded-panel.works-arrival { transition: none; clip-path: inset(0); }
 
-    .restaurant-photo { object-position: 50% 0%; transform: scale(1.45); transform-origin: 50% 0%; }
+    .restaurant-photo { object-position: 50% 83%; transform: scale(1.25); transform-origin: 50% 50%; }
     .story-step p + p { margin-top: 20px; }
     .work-meta { flex-wrap: wrap; }
     .cupid-assets { display: grid; gap: 24px; margin-top: 24px; }
@@ -486,13 +486,13 @@
 }
 @media(prefers-reduced-motion:reduce) { .expanded-panel.closing .close { animation:none; } }
 
-.home-photo-caption { position:absolute; inset:0; z-index:3; display:flex; align-items:flex-end; padding:clamp(18px,4vw,38px); pointer-events:none; opacity:0; transition:opacity .22s ease; background:linear-gradient(transparent 25%,#0009); }
+.home-photo-caption { position:absolute; top:calc(100% + 24px); left:-7%; width:114%; z-index:3; display:flex; justify-content:center; pointer-events:none; opacity:0; transition:opacity .22s ease; }
 .home-photo-caption.is-visible { opacity:1; }
-.home-caption-text { max-width:28ch; margin:0; color:white; font-size:clamp(20px,2.7vw,36px); font-weight:400; line-height:1.35; letter-spacing:-.02em; text-shadow:0 2px 12px #0008; }
+.home-caption-text { max-width:36ch; margin:0; color:#111; text-align:center; font-size:clamp(18px,2.1vw,28px); font-weight:400; line-height:1.55; letter-spacing:.015em; }
 .home-caption-word { display:inline-block; white-space:nowrap; }
 .home-caption-letter { display:inline-block; }
 .home-photo-caption.is-visible .home-caption-letter { animation:scatter-caption 650ms cubic-bezier(.16,1,.3,1) both; animation-delay:var(--letter-delay); }
-@keyframes scatter-caption { from { opacity:0; transform:translate(var(--letter-x),var(--letter-y)) rotate(var(--letter-angle)); } to { opacity:1; transform:translate(0,0) rotate(0); } }
+@keyframes scatter-caption { from { opacity:0; transform:translate(var(--letter-x),var(--letter-y)) rotate(var(--letter-angle)); } to { opacity:1; transform:translate(var(--letter-rest-x),var(--letter-rest-y)) rotate(var(--letter-rest-angle)); } }
 @media(prefers-reduced-motion:reduce) { .home-photo-caption { transition:none; } .home-photo-caption.is-visible .home-caption-letter { animation:none; } }
 .about-instagram { display:flex; align-items:center; flex-wrap:wrap; gap:8px 14px; }
 .about-instagram .instagram-note { margin:0; }
@@ -555,7 +555,7 @@
     const captionText = document.createElement('p');
     captionText.className = 'home-caption-text';
     homeCaption.append(captionText);
-    homeScene.append(homeCaption);
+    preview.append(homeCaption);
     const homeMessages = ['This is me.', 'This is my name. I spotted this sign in Paris in 2024!'];
     let photoIndex = 0;
     let homeCaptionTimer = null;
@@ -577,6 +577,9 @@
           span.style.setProperty('--letter-y', `${Math.cos(letterIndex * 1.8) * 45}px`);
           span.style.setProperty('--letter-angle', `${Math.sin(letterIndex) * 24}deg`);
           span.style.setProperty('--letter-delay', `${letterIndex * 12}ms`);
+          span.style.setProperty('--letter-rest-x', `${Math.sin(letterIndex * 2.4) * 1.2}px`);
+          span.style.setProperty('--letter-rest-y', `${Math.cos(letterIndex * 1.8) * 2}px`);
+          span.style.setProperty('--letter-rest-angle', `${Math.sin(letterIndex) * 3}deg`);
           wrapper.append(span);
           letterIndex++;
         }
