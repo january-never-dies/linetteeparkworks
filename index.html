@@ -194,7 +194,7 @@
     .entry-closed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scale(1.15); }
     .expanded-panel.works-arrival { transition: none; clip-path: inset(0); }
 
-    .restaurant-photo { object-position: 50% 83%; transform: scale(1.25); transform-origin: 50% 50%; }
+    .restaurant-photo { object-position: 50% 83%; transform: translateX(2%) scale(1.5); transform-origin: 50% 50%; }
     .story-step p + p { margin-top: 20px; }
     .work-meta { flex-wrap: wrap; }
     .cupid-assets { display: grid; gap: 24px; margin-top: 24px; }
@@ -588,32 +588,51 @@ body.works-entering .menu-toggle span { background:#fff; }
       captionText.replaceChildren();
       let letterIndex = 0;
       const words = homeMessages[photoIndex].split(' ');
-      const groups = photoIndex === 0 ? [words] : [words.slice(0,5), words.slice(5,9), words.slice(9)];
       const width = preview.clientWidth;
       const height = preview.clientHeight;
-      const fontSize = Math.min(24, Math.max(16, innerWidth * .018));
-      const advance = fontSize * .58;
-      groups.forEach((group, row) => {
-        const text = group.join(' ');
-        const total = text.length * advance;
-        const top = photoIndex === 0 || row === 0;
-        const y = top ? -fontSize - 24 : height + 24 + (row - 1) * (fontSize + 15);
+      const fontSize = parseFloat(getComputedStyle(captionText).fontSize);
+      const measure = document.createElement('canvas').getContext('2d');
+      const captionStyle = getComputedStyle(captionText);
+      measure.font = `${captionStyle.fontWeight} ${fontSize}px ${captionStyle.fontFamily}`;
+      const spreadWidth = Math.min(width * 1.4, innerWidth - 44);
+      // Allocate actual glyph widths plus room for rotation, rather than fixed-width slots.
+      const gap = Math.max(7, fontSize * .38);
+      const glyphWidth = letter => measure.measureText(letter).width + (letter === ' ' ? 0 : fontSize * .3);
+      const lineWidth = text => [...text].reduce((sum, letter) => sum + glyphWidth(letter) + gap, 0) - gap;
+      const groups = [];
+      let line = '';
+      for (const word of words) {
+        const candidate = line ? `${line} ${word}` : word;
+        if (line && lineWidth(candidate) > spreadWidth) { groups.push(line); line = word; }
+        else line = candidate;
+      }
+      if (line) groups.push(line);
+      groups.forEach((text, row) => {
+        const top = row === 0;
+        const naturalWidth = lineWidth(text);
+        const extraGap = text.length > 1 ? Math.min(fontSize * .45, Math.max(0, spreadWidth - naturalWidth) / (text.length - 1)) : 0;
+        const total = naturalWidth + extraGap * (text.length - 1);
+        const y = top ? -fontSize - 42 : height + 36 + (row - 1) * (fontSize * 2.8);
+        let x = -total / 2;
         [...text].forEach((letter, index) => {
-          if (letter === ' ') return;
-          const span = document.createElement('span');
-          span.className = 'home-caption-letter';
-          span.textContent = letter;
-          // Start inside the photograph, then fan outward into readable scattered rows.
-          span.style.setProperty('--letter-start-x', `${(index - text.length / 2) * advance * .35}px`);
-          span.style.setProperty('--letter-start-y', `${top ? -height * .15 : height * .15}px`);
-          span.style.setProperty('--letter-end-x', `${(width - total) / 2 + index * advance - width / 2}px`);
-          span.style.setProperty('--letter-end-y', `${y - height / 2 + Math.sin(index * 1.3 + row) * 7}px`);
-          span.style.setProperty('--letter-rest-angle', `${Math.sin(index * 1.7) * 10}deg`);
-          span.style.setProperty('--letter-delay', `${letterIndex * 10}ms`);
-          captionText.append(span);
-          letterIndex++;
+          const allocatedWidth = glyphWidth(letter);
+          if (letter !== ' ') {
+            const span = document.createElement('span');
+            span.className = 'home-caption-letter';
+            span.textContent = letter;
+            span.style.setProperty('--letter-start-x', `${x * .7}px`);
+            span.style.setProperty('--letter-start-y', `${top ? -height * .15 : height * .15}px`);
+            span.style.setProperty('--letter-end-x', `${x}px`);
+            span.style.setProperty('--letter-end-y', `${y - height / 2 + Math.sin(index * 1.3 + row) * 12}px`);
+            span.style.setProperty('--letter-rest-angle', `${Math.sin(index * 1.7) * 7}deg`);
+            span.style.setProperty('--letter-delay', `${letterIndex * 10}ms`);
+            captionText.append(span);
+            letterIndex++;
+          }
+          x += allocatedWidth + gap + extraGap;
         });
       });
+
       homeCaption.classList.add('is-visible');
       preview.setAttribute('aria-label', homeMessages[photoIndex]);
       homeCaptionTimer = setTimeout(() => { if (!homeHovered) homeCaption.classList.remove('is-visible'); }, 6000);
