@@ -678,6 +678,22 @@ body.is-open .site-header.scrolled-away { opacity:1;transform:none;pointer-event
 @media(max-width:1000px){.landing-works .reference-overview{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:600px){.landing-intro{padding:22px 0 28px;}.landing-works .reference-overview{grid-template-columns:1fr;}.expanded-panel .work-card>.project-hero>img{max-height:300px;}.expanded-panel .detail-section{padding-top:90px;}}
 @media(prefers-reduced-motion:reduce){.works .reference-thumbnail .thumbnail-visual>*{transition:none!important;}.works .reference-thumbnail:hover .thumbnail-visual>*,.works .reference-thumbnail:focus-visible .thumbnail-visual>*{transform:none!important;}}
+
+/* Compact project openings: shared bounds based on the Melt Before screen trio. */
+.expanded-panel .work-card { row-gap:20px; }
+.expanded-panel .work-card>.project-hero { max-width:600px; }
+.expanded-panel .work-card>.project-hero>img { max-height:min(240px,28svh); }
+.expanded-panel .melt-hero-screens { height:min(240px,28svh); }
+.expanded-panel .project-hero figcaption { margin-top:8px; }
+.expanded-panel .works .work-info h3 { font-size:clamp(30px,3.5vw,46px);margin-bottom:12px; }
+.expanded-panel .works .work-meta { margin-bottom:16px; }
+.expanded-panel .melt-project .work-info>.project-logo { float:right;width:48px;height:48px;margin:0 0 12px 20px; }
+@media(max-width:600px){
+ .expanded-panel .work-card>.project-hero>img { max-height:min(160px,22svh); }
+ .expanded-panel .melt-hero-screens { height:min(160px,22svh); }
+ .expanded-panel .work-card { row-gap:16px; }
+ .expanded-panel .project-detail-back { padding-bottom:16px; }
+}
 </style>
 </head>
 <body>
