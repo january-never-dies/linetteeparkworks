@@ -1,0 +1,46 @@
+name: Apply latest uploaded portfolio images
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-recent-image-uploads.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Update hero image references safely
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+          replacements = {
+              'assets/project-images/ddeosungee-hero-v2.png': 'assets/ddeosunghero.png',
+              'assets/project-images/melt-before-hero@2x.png': 'assets/melt-before-hero.png',
+          }
+          for old, new in replacements.items():
+              if not Path(new).is_file():
+                  raise SystemExit(f'Missing uploaded asset: {new}')
+              count = text.count(old)
+              print(f'{old}: {count} existing references')
+              if count == 0 and new not in text:
+                  raise SystemExit(f'Cannot find existing reference for {old}; no changes committed')
+              text = text.replace(old, new)
+          p.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit image reference fix
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "Image references are already updated."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Point portfolio hero images to latest uploaded files"
+          git push
