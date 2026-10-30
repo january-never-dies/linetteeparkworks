@@ -61,7 +61,7 @@ jobs:
               .decision-change { border-left-color: #C8C8C2; }
               .taste-graphic { border-color: #464646; }
               /* Keep photographic thumbnails, artwork, phone screens and 3D objects unchanged. */
-    """
+          """
           assert 'Global light editorial palette' not in s
           s=s.replace('</style>',theme+'\n</style>',1)
           p.write_text(s,encoding='utf-8')
