@@ -759,7 +759,8 @@ const overview=works.querySelector('.reference-overview').cloneNode(true);
 overview.append(overview.querySelector('[data-project-open="ive"]'),overview.querySelector('[data-project-open="worldcone"]'));
 document.querySelector('#landing-projects').append(overview);
 let lastTrigger=null;
-function setMenu(open){header.classList.toggle('menu-open',open);menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close menu':'Open menu');}
+let menuCloseTimer;
+function setMenu(open){clearTimeout(menuCloseTimer);header.classList.toggle('menu-open',open);menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close menu':'Open menu');}
 function openDetail(key,trigger){
  const source=works.querySelector('[data-project="'+key+'"]');if(!source)return;
  lastTrigger=trigger||lastTrigger;
@@ -769,6 +770,21 @@ function openDetail(key,trigger){
 }
 function showPanel(){setMenu(false);panel.classList.add('visible','open');panel.setAttribute('aria-hidden','false');document.body.classList.add('is-open');panel.scrollTop=0;panel.querySelector('.close').focus({preventScroll:true});}
 function closePanel(){panel.classList.remove('visible','open');panel.setAttribute('aria-hidden','true');document.body.classList.remove('is-open');content.replaceChildren();lastTrigger?.focus({preventScroll:true});}
+const navigation = document.getElementById('primary-nav');
+for (const region of [menu, navigation]) {
+  region.addEventListener('pointerenter', event => {
+    if (event.pointerType === 'mouse') setMenu(true);
+  });
+  region.addEventListener('pointerleave', event => {
+    if (event.pointerType !== 'mouse') return;
+    menuCloseTimer = setTimeout(() => {
+      if (!navigation.contains(document.activeElement)) setMenu(false);
+    }, 160);
+  });
+}
+header.addEventListener('focusout', event => {
+  if (!header.contains(event.relatedTarget)) setMenu(false);
+});
 menu.addEventListener('click',()=>setMenu(!header.classList.contains('menu-open')));
 document.addEventListener('click',event=>{
  const project=event.target.closest('[data-project-open]');if(project){openDetail(project.dataset.projectOpen,project.closest('#home')?project:null);return;}

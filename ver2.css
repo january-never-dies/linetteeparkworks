@@ -45,7 +45,12 @@ html, body, .site-header, body.is-open .site-header, .direct-home,
 }
 .menu-toggle span { display: block; width: 23px; height: 2px; }
 .site-header .nav {
-  display: none;
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 150ms ease, transform 150ms ease, visibility 0s linear 150ms;
   position: absolute;
   top: calc(50% + 22px);
   right: var(--header-inset);
@@ -56,7 +61,16 @@ html, body, .site-header, body.is-open .site-header, .direct-home,
   align-items: stretch;
   gap: 0;
 }
-.site-header.menu-open .nav { display: flex; }
+.site-header.menu-open .nav {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header .nav { transition: none; transform: none; }
+}
 .site-header .nav button { min-height: 44px; }
 
 @media (hover: hover) and (pointer: fine) and (forced-colors: none) {
