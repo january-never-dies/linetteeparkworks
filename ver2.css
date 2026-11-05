@@ -1,0 +1,69 @@
+@font-face {
+  font-family: "Leon Sans";
+  src: url("fonts/LeonSans.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+:root { color-scheme: light; --portfolio-dark: #fff; --portfolio-ink: #000; }
+body, button, a, body * {
+  font-family: "Leon Sans", sans-serif !important;
+  color: #000 !important;
+}
+html, body, .site-header, body.is-open .site-header, .direct-home,
+.expanded-panel, .expanded-content, .detail-section, .landing-intro,
+.detail-section.works, .detail-section.about, .site-header .nav {
+  background: #fff !important;
+}
+/* Align the ink edges of the heading's L and the intro's I. */
+.landing-intro h1 {
+  font-weight: 900;
+  margin-inline-start: calc(clamp(16px, 1.6vw, 21px) * .09129 - .08906em);
+}
+.menu-toggle span, .close::before, .close::after { background: #000 !important; }
+.works .reference-thumbnail .thumbnail-tag { background: #f1f1f1; }
+.about-info-block, .work-card, .site-header .nav { border-color: #ddd; }
+:focus-visible { outline: 2px solid #000; outline-offset: 3px; }
+
+.site-header {
+  --header-inset: max(clamp(24px, 6vw, 90px), calc((100% - 1600px) / 2 + 90px));
+  align-items: center;
+  padding-inline: var(--header-inset);
+}
+.site-header .menu-toggle { margin-inline-start: auto; }
+.menu-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.menu-toggle span { display: block; width: 23px; height: 2px; }
+.site-header .nav {
+  display: none;
+  position: absolute;
+  top: calc(50% + 22px);
+  right: var(--header-inset);
+  width: 150px;
+  padding: 6px 16px;
+  border: 1px solid #ddd;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+.site-header.menu-open .nav { display: flex; }
+.site-header .nav button { min-height: 44px; }
+
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) {
+  html {
+    cursor: url("assets/cursors/arrow.svg") 2 2, auto;
+  }
+  body :is(a[href], button:enabled, summary) {
+    cursor: url("assets/cursors/hand.svg") 9 3, pointer !important;
+  }
+}
